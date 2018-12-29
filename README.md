@@ -5,6 +5,7 @@ This is a repository for my solutions to the [Advent of Code Challenges](https:/
 ## Directories
 
 Each directory is a year containing the files:
+
 -YYYYChallengeInputN.txt
 -AOCYYY_N.py
 
