@@ -13,14 +13,17 @@ class LightController(object):
         self.command_regex = re.compile(r'turn on|turn off|toggle')
         for x in range(columns):
             for y in range(rows):
-                self.lights[(x,y)] = Light()
+                self.lights[(x,y)] = Dimmable()
     
     def __str__(self):
         lit = 0
+        brightness = 0
         for light in self.lights.values():
             if light.is_on:
                 lit += 1
-        return str(lit) + ' lights are on.'
+                if isinstance(light, Dimmable):
+                    brightness += light.brightness
+        return str(lit) + ' lights are on. With a brightness of ' + str(brightness)
     
     def get_command(self, line):
         begin, end = re.findall(self.position_regex, line)
@@ -46,6 +49,27 @@ class Light(object):
             self.is_on = False
         elif command == 'toggle':
             self.is_on = not self.is_on
+
+class Dimmable(object):
+    '''A class for simulating a dimmable light.'''
+    def __init__(self):
+        self.brightness = 0
+        self.is_on = False
+
+    def set_is_on(self):
+        if self.brightness == 0:
+            self.is_on = False
+        else:
+            self.is_on = True
+
+    def switch(self, command):
+        if command == 'turn on':
+            self.brightness += 1
+        elif command == 'turn off' and self.brightness != 0:
+            self.brightness -= 1
+        elif command == 'toggle':
+            self.brightness += 2
+        self.set_is_on()
 
 def main():
     Controller = LightController(1000, 1000)
